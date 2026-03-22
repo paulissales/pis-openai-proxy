@@ -42,9 +42,12 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json({
-      ok: true,
-      output: data.choices?.[0]?.message?.content || ""
-    });
+  ok: true,
+  upgraded_offer: data.choices?.[0]?.message?.content || "",
+  adds: [],
+  points_added: 0,
+  upgraded_score: 0
+});
 
   } catch (err) {
     return res.status(200).json({
