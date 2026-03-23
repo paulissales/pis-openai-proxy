@@ -14,7 +14,12 @@ export default async function handler(req, res) {
       return res.status(405).json({ ok: false, error: "Method not allowed" });
     }
 
-    const { system, user } = req.body;
+const system = "You improve and upgrade irresistible offers. Return only the upgraded offer text.";
+
+const user =
+  typeof req.body?.offerText === "string" && req.body.offerText.trim()
+    ? req.body.offerText
+    : JSON.stringify(req.body || {});
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
