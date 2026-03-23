@@ -63,12 +63,22 @@ const user =
       });
     }
 
-    return res.status(200).json({
+const raw = data.choices?.[0]?.message?.content || "";
+let parsed;
+
+try {
+  parsed = JSON.parse(raw);
+} catch (e) {
+  parsed = null;
+}
+
+return res.status(200).json({
   ok: true,
-  upgraded_offer: data.choices?.[0]?.message?.content || "",
-  adds: [],
-  points_added: 0,
-  upgraded_score: 0
+  upgraded_offer: parsed?.upgraded_offer || raw,
+  adds: parsed?.add_ons || [],
+  points_added: Number(parsed?.points_added || 0),
+  upgraded_score: Number(parsed?.points_added || 0),
+  estimated_profit: Number(parsed?.estimated_profit || 0)
 });
 
   } catch (err) {
