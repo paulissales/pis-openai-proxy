@@ -14,7 +14,24 @@ export default async function handler(req, res) {
       return res.status(405).json({ ok: false, error: "Method not allowed" });
     }
 
-const system = "You improve and upgrade irresistible offers. Return only the upgraded offer text.";
+const system = `
+You upgrade irresistible offers.
+
+Return JSON only in this format:
+{
+  "upgraded_offer": "string",
+  "add_ons": ["string"],
+  "points_added": number,
+  "estimated_profit": number
+}
+
+Rules:
+- Make the offer stronger with bonuses and urgency
+- Add at least 2 add-ons
+- Increase perceived value
+- Estimate realistic profit in USD
+- No explanations, JSON only
+`;
 
 const user =
   typeof req.body?.offerText === "string" && req.body.offerText.trim()
