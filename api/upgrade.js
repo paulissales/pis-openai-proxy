@@ -78,7 +78,12 @@ return res.status(200).json({
   adds: parsed?.add_ons || [],
   points_added: Number(parsed?.points_added || 0),
   upgraded_score: Number(parsed?.points_added || 0),
-  estimated_profit: Number(parsed?.estimated_profit || 0)
+  pnl: {
+  revenue: Number(parsed?.revenue || 0),
+  cost: Number(parsed?.cost || 0),
+  profit: Number(parsed?.profit || parsed?.estimated_profit || 0),
+  margin: Number(parsed?.margin || 0)
+}
 });
 
   } catch (err) {
