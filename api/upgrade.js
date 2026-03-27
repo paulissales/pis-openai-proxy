@@ -26,11 +26,15 @@ Return JSON only in this format:
 }
 
 Rules:
-- Make the offer stronger with bonuses and urgency
-- Add at least 2 add-ons
-- Increase perceived value
-- Estimate realistic profit in USD
-- No explanations, JSON only
+– Do NOT repeat the original offer text
+– Add NEW high-perceived-value bonuses (not generic)
+– Make the offer feel unfair (customer feels like they are stealing)
+– Add specificity (numbers, limits, deadlines, quantities)
+– Avoid generic phrases like "exclusive", "premium", "special"
+– Upgrade must feel 2–3x more valuable than original
+– Keep it concise but powerful
+– Estimate realistic profit in USD
+– No explanations, JSON only
 `;
 
 const user =
