@@ -26,7 +26,8 @@ Return JSON only in this exact format:
   "revenue": number,
   "cost": number,
   "profit": number,
-  "margin": number
+  "margin": number,
+  "breakeven_customers": number
 }
 
 Hard rules:
