@@ -88,11 +88,6 @@ Make the upgrade feel materially stronger, not just rewritten.
 Return JSON only.
 `;
 
-const user =
-  typeof req.body?.offerText === "string" && req.body.offerText.trim()
-    ? req.body.offerText
-    : JSON.stringify(req.body || {});
-
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
