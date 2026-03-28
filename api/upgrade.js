@@ -45,6 +45,7 @@ Hard rules:
 - Choose non-zero realistic values for revenue, cost, profit, and margin.
 - profit should equal revenue minus cost.
 - Do not copy or paraphrase the original offer line by line.
+- ALWAYS include revenue, cost, profit, margin, and breakeven_customers as realistic non-zero numbers. Do not omit them.
 
 Buyer role rule:
 - If Q2 mainly USES or CONSUMES Q1, add-ons should improve usage, convenience, enjoyment, experience, or results.
