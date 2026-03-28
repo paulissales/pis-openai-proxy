@@ -15,16 +15,77 @@ export default async function handler(req, res) {
     }
 
 const system = `
-You upgrade irresistible offers.
+You are upgrading an offer to make it feel like "stealing" (high perceived value) while staying realistic and useful.
 
-Return JSON only in this format:
+Return JSON only in this exact format:
 {
   "upgraded_offer": "string",
-  "add_ons": ["string"],
+  "add_ons": ["string", "string", "string", "string", "string"],
   "points_added": number,
-  "estimated_profit": number
+  "upgraded_score": number,
+  "revenue": number,
+  "cost": number,
+  "profit": number,
+  "margin": number
 }
 
+Hard rules:
+- No vague filler like "build trust" or "add urgency" without concrete execution.
+- Every add-on must include a SPECIFIC item, benefit, or mechanism.
+- Use buyer context (Q2) and product context (Q1) to choose relevant freebies.
+- If the offer is already strong (score >= 90), add fewer but higher-impact upgrades.
+- Keep it realistic: low cost, high perceived value, but it can feel "crazy good".
+- upgraded_offer must be under 650 characters.
+- add_ons must be exactly 5 items.
+- each add_on must be under 120 characters.
+- upgraded_offer must ONLY include items listed in add_ons.
+- All money values must be in USD.
+- Use the $ symbol. Do not mention local currency.
+- Choose non-zero realistic values for revenue, cost, profit, and margin.
+- profit should equal revenue minus cost.
+- Do not copy or paraphrase the original offer line by line.
+
+Buyer role rule:
+- If Q2 mainly USES or CONSUMES Q1, add-ons should improve usage, convenience, enjoyment, experience, or results.
+- If Q2 mainly RESELLS, DISTRIBUTES, or DELIVERS Q1, add-ons should improve sell-through, conversion, repeat orders, or retailer success.
+- If Q2 is a business that USES Q1 in operations, add-ons should improve efficiency, reliability, staff adoption, or commercial outcomes.
+
+Scoring rule:
+- Add points only when the upgrade is genuinely stronger.
+- Small cosmetic change = 5 to 15 points.
+- Useful practical upgrade = 15 to 35 points.
+- Strong hidden-need or role-specific upgrade = 35 to 70 points.
+- Exceptional collaboration, loyalty, referral, or long-term value mechanic = 70 to 100 points.
+- upgraded_score must equal base_score + points_added.
+`;
+
+const user = `
+Original offer (text):
+${typeof req.body?.offerText === "string" && req.body.offerText.trim()
+  ? req.body.offerText
+  : JSON.stringify(req.body || {})}
+
+Buyer context (Q2):
+${req.body?.q2_buyer || req.body?.q2 || "Unknown"}
+
+Product context (Q1):
+${req.body?.q1_product || req.body?.q1 || "Unknown"}
+
+Base score:
+${Number.isFinite(Number(req.body?.base_score)) ? Number(req.body.base_score) : 0}
+
+Financial inputs (USD):
+AOV=$${Number(req.body?.aov || req.body?.pnlInputs?.aov || 0)},
+GrossMargin=${Number(req.body?.grossMarginPct || req.body?.pnlInputs?.grossMarginPct || 0)}%,
+GiftCost=$${Number(req.body?.giftCost || req.body?.pnlInputs?.giftCost || 0)},
+Redemptions=${Number(req.body?.expectedRedemptions || req.body?.pnlInputs?.expectedRedemptions || 0)},
+NewCustomers=${Number(req.body?.expectedNewCustomers || req.body?.pnlInputs?.expectedNewCustomers || 0)}
+
+Task:
+Upgrade the original offer for the buyer in Q2.
+Identify practical hidden needs and solve them with 5 concrete add-ons.
+Make the upgrade feel materially stronger, not just rewritten.
+Return JSON only.
 `;
 
 const user =
