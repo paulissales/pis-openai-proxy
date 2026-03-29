@@ -22,12 +22,13 @@ Return JSON only in this exact format:
   "upgraded_offer": "string",
   "add_ons": ["string", "string", "string", "string", "string"],
   "points_added": number,
-  "upgraded_score": number,
-  "revenue": number,
-  "cost": number,
-  "profit": number,
-  "margin": number,
-  "breakeven_customers": number
+  "pnl_inputs": {
+    "aov": number,
+    "grossMarginPct": number,
+    "giftCost": number,
+    "expectedRedemptions": number,
+    "expectedNewCustomers": number
+  }
 }
 
 Hard rules:
@@ -46,6 +47,7 @@ Hard rules:
 - profit should equal revenue minus cost.
 - Do not copy or paraphrase the original offer line by line.
 - ALWAYS include revenue, cost, profit, margin, and breakeven_customers as realistic non-zero numbers. Do not omit them.
+- You MUST estimate pnl_inputs based on Q1 and Q2: B2B = bulk/high AOV, B2C = single purchase/lower AOV; values must be realistic and non-zero.
 
 Buyer role rule:
 - If Q2 mainly USES or CONSUMES Q1, add-ons should improve usage, convenience, enjoyment, experience, or results.
