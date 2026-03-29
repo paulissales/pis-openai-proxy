@@ -124,6 +124,28 @@ try {
   parsed = null;
 }
 
+const aov = Number(req.body?.aov || req.body?.pnlInputs?.aov || 0);
+const grossMarginPct = Number(req.body?.grossMarginPct || req.body?.pnlInputs?.grossMarginPct || 0);
+const giftCost = Number(req.body?.giftCost || req.body?.pnlInputs?.giftCost || 0);
+const expectedRedemptions = Math.max(
+  0,
+  Math.round(Number(req.body?.expectedRedemptions || req.body?.pnlInputs?.expectedRedemptions || 0))
+);
+const expectedNewCustomers = Math.max(
+  0,
+  Math.round(Number(req.body?.expectedNewCustomers || req.body?.pnlInputs?.expectedNewCustomers || 0))
+);
+
+const gm = grossMarginPct / 100;
+const revenueNum = aov * expectedNewCustomers;
+const grossProfitNum = revenueNum * gm;
+const promoCostNum = giftCost * expectedRedemptions;
+const netProfitNum = grossProfitNum - promoCostNum;
+const profitPerCustomer = aov * gm;
+const breakEvenNewCustomers = profitPerCustomer > 0
+  ? Math.ceil(promoCostNum / profitPerCustomer)
+  : 0;
+    
 return res.status(200).json({
   ok: true,
   upgraded_offer: parsed?.upgraded_offer || raw,
@@ -131,11 +153,18 @@ return res.status(200).json({
   points_added: Number(parsed?.points_added || 0),
   upgraded_score: Number(parsed?.points_added || 0),
   pnl: {
-  revenue: `$${Number(parsed?.revenue || 0)}`,
-  grossProfit: `$${Number(parsed?.profit || parsed?.estimated_profit || 0)}`,
-  promoCost: `$${Number(parsed?.cost || 0)}`,
-  netProfit: `$${Number(parsed?.profit || parsed?.estimated_profit || 0)}`,
-  breakEvenNewCustomers: Number(parsed?.breakeven_customers || 0)
+  inputs: {
+    aov,
+    grossMarginPct,
+    giftCost,
+    expectedRedemptions,
+    expectedNewCustomers
+  },
+  revenue: `$${revenueNum}`,
+  grossProfit: `$${grossProfitNum}`,
+  promoCost: `$${promoCostNum}`,
+  netProfit: `$${netProfitNum}`,
+  breakEvenNewCustomers
 }
 });
 
