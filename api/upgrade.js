@@ -126,16 +126,18 @@ try {
   parsed = null;
 }
 
-const aov = Number(req.body?.aov || req.body?.pnlInputs?.aov || 0);
-const grossMarginPct = Number(req.body?.grossMarginPct || req.body?.pnlInputs?.grossMarginPct || 0);
-const giftCost = Number(req.body?.giftCost || req.body?.pnlInputs?.giftCost || 0);
+const aov = Number(parsed?.pnl_inputs?.aov || 0);
+const grossMarginPct = Number(parsed?.pnl_inputs?.grossMarginPct || 0);
+const giftCost = Number(parsed?.pnl_inputs?.giftCost || 0);
+
 const expectedRedemptions = Math.max(
   0,
-  Math.round(Number(req.body?.expectedRedemptions || req.body?.pnlInputs?.expectedRedemptions || 0))
+  Math.round(Number(parsed?.pnl_inputs?.expectedRedemptions || 0))
 );
+
 const expectedNewCustomers = Math.max(
   0,
-  Math.round(Number(req.body?.expectedNewCustomers || req.body?.pnlInputs?.expectedNewCustomers || 0))
+  Math.round(Number(parsed?.pnl_inputs?.expectedNewCustomers || 0))
 );
 
 const gm = grossMarginPct / 100;
