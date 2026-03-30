@@ -63,6 +63,7 @@ Scoring rule:
 - upgraded_score must equal base_score + points_added.
 `;
 
+const deviceId = req.body?.device_id || "unknown";    
 const user = `
 Original offer (text):
 ${typeof req.body?.offerText === "string" && req.body.offerText.trim()
