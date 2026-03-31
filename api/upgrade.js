@@ -1,4 +1,6 @@
 module.exports = async function handler(req, res) {
+  const { Redis } = require('@upstash/redis');
+  const redis = Redis.fromEnv();
   // CORS HEADERS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -14,6 +16,29 @@ module.exports = async function handler(req, res) {
       return res.status(405).json({ ok: false, error: "Method not allowed" });
     }
 
+const body = req.body || {};
+const email = (body.email || "").toLowerCase().trim();
+const deviceId = body.device_id || "unknown";
+
+// Check if paid
+const isPaid = !!(await redis.get(`paid:${email}`));
+
+// Get usage
+let usage = await redis.get(`device:${deviceId}`);
+usage = usage ? parseInt(usage) : 0;
+
+// Block if not paid and over limit
+if (!isPaid && usage >= 3) {
+  return res.status(200).json({
+    ok: false,
+    limitReached: true,
+    message: "🔥 You've already unlocked 2 upgrades. Upgrade to continue."
+  });
+}
+
+// Increment usage
+await redis.set(`device:${deviceId}`, usage + 1);    
+    
 const system = `
 You are upgrading an offer to make it feel like "stealing" (high perceived value) while staying realistic and useful.
 
