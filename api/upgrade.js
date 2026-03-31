@@ -20,10 +20,10 @@ const email = (body.email || "").toLowerCase().trim();
 const deviceId = body.device_id || "unknown";
 
 // Check if paid
-const isPaid = !!(await redis.get(`paid:${email}`));
+
 
 // Get usage
-let usage = await redis.get(`device:${deviceId}`);
+
 usage = usage ? parseInt(usage) : 0;
 
 // Block if not paid and over limit
@@ -36,7 +36,7 @@ if (!isPaid && usage >= 3) {
 }
 
 // Increment usage
-await redis.set(`device:${deviceId}`, usage + 1);    
+
     
 const system = `
 You are upgrading an offer to make it feel like "stealing" (high perceived value) while staying realistic and useful.
