@@ -1,6 +1,5 @@
 module.exports = async function handler(req, res) {
-  const { Redis } = require('@upstash/redis');
-  const redis = Redis.fromEnv();
+
   // CORS HEADERS
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
