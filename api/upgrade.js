@@ -18,25 +18,6 @@ module.exports = async function handler(req, res) {
 const body = req.body || {};
 const email = (body.email || "").toLowerCase().trim();
 const deviceId = body.device_id || "unknown";
-
-// Check if paid
-
-
-// Get usage
-
-usage = usage ? parseInt(usage) : 0;
-
-// Block if not paid and over limit
-if (!isPaid && usage >= 3) {
-  return res.status(200).json({
-    ok: false,
-    limitReached: true,
-    message: "🔥 You've already unlocked 2 upgrades. Upgrade to continue."
-  });
-}
-
-// Increment usage
-
     
 const system = `
 You are upgrading an offer to make it feel like "stealing" (high perceived value) while staying realistic and useful.
