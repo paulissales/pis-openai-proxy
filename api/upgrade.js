@@ -18,6 +18,14 @@ module.exports = async function handler(req, res) {
 const body = req.body || {};
 const email = (body.email || "").toLowerCase().trim();
 const deviceId = body.device_id || "unknown";
+
+const email = (req.body?.email || "").toLowerCase().trim();
+
+const paidRes = await fetch(`${process.env.KV_REST_API_URL}/get/${encodeURIComponent(`paid:${email}`)}`, {
+  headers: { Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}` }
+});
+const paidJson = await paidRes.json();
+const isPaid = !!paidJson.result;
     
 const system = `
 You are upgrading an offer to make it feel like "stealing" (high perceived value) while staying realistic and useful.
