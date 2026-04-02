@@ -26,6 +26,12 @@ const paidRes = await fetch(`${process.env.KV_REST_API_URL}/get/${encodeURICompo
 });
 const paidJson = await paidRes.json();
 const isPaid = !!paidJson.result;
+
+let usageRes = await fetch(`${process.env.KV_REST_API_URL}/get/${encodeURIComponent(`device:${deviceId}`)}`, {
+  headers: { Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}` }
+});
+let usageJson = await usageRes.json();
+let usage = parseInt(usageJson.result || "0", 10);
     
 const system = `
 You are upgrading an offer to make it feel like "stealing" (high perceived value) while staying realistic and useful.
