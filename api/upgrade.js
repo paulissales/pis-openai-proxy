@@ -32,6 +32,14 @@ let usageRes = await fetch(`${process.env.KV_REST_API_URL}/get/${encodeURICompon
 });
 let usageJson = await usageRes.json();
 let usage = parseInt(usageJson.result || "0", 10);
+
+if (!isPaid && usage >= 2) {
+  return res.status(200).json({
+    ok: false,
+    limitReached: true,
+    message: `🚀 Hi ${body.first_name || "there"}, you’ve used your free upgrades. Unlock unlimited for $9/month.`
+  });
+}
     
 const system = `
 You are upgrading an offer to make it feel like "stealing" (high perceived value) while staying realistic and useful.
