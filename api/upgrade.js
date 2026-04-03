@@ -40,7 +40,10 @@ if (!isPaid && usage >= 2) {
     message: `🚀 Hi ${body.first_name || "there"}, you’ve used your free upgrades. Unlock unlimited for $9/month.`
   });
 }
-    
+await fetch(`${process.env.KV_REST_API_URL}/set/${encodeURIComponent(`device:${deviceId}`)}/${usage + 1}`, {
+  headers: { Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}` }
+});
+
 const system = `
 You are upgrading an offer to make it feel like "stealing" (high perceived value) while staying realistic and useful.
 
