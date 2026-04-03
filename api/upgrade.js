@@ -33,7 +33,7 @@ let usageRes = await fetch(`${process.env.KV_REST_API_URL}/get/${encodeURICompon
 let usageJson = await usageRes.json();
 let usage = parseInt(usageJson.result || "0", 10);
 
-if (!isPaid && usage >= 2) {
+if (false) {
   return res.status(200).json({
     ok: false,
     limitReached: true,
