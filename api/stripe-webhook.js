@@ -1,3 +1,5 @@
+const { kv } = require('@vercel/kv');
+
 module.exports = async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -23,10 +25,19 @@ module.exports = async function handler(req, res) {
       event?.data?.object?.customer_email ||
       "";
 
-    console.log("✅ PAYMENT SUCCESS:", email);
+    if (!email) {
+      console.error("❌ No email found in Stripe webhook");
+      return res.status(400).json({ error: "no email found" });
+    }
 
-    return res.status(200).json({ received: true, email });
+    const cleanEmail = String(email).trim().toLowerCase();
 
+    await kv.set(`paid:${cleanEmail}`, true);
+
+    console.log("✅ PAYMENT SUCCESS:", cleanEmail);
+    console.log("✅ SAVED PAID KEY:", `paid:${cleanEmail}`);
+
+    return res.status(200).json({ received: true, email: cleanEmail });
   } catch (err) {
     console.error("❌ webhook error", err);
     return res.status(500).json({ error: "server error" });
