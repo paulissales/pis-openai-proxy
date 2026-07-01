@@ -21,14 +21,14 @@ const deviceId = body.device_id || "unknown";
 
 const lookupEmail = email;
 
-const paidRes = await fetch(`${process.env.KV_REST_API_URL}/get/${encodeURIComponent(`paid:${email}`)}`, {
-  headers: { Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}` }
+const paidRes = await fetch(`${process.env.UPSTASH2_KV_REST_API_URL}/get/${encodeURIComponent(`paid:${email}`)}`, {
+  headers: { Authorization: `Bearer ${process.env.UPSTASH2_KV_REST_API_TOKEN}` }
 });
 const paidJson = await paidRes.json();
 const isPaid = !!paidJson.result;
 
-let usageRes = await fetch(`${process.env.KV_REST_API_URL}/get/${encodeURIComponent(`device:${deviceId}`)}`, {
-  headers: { Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}` }
+let usageRes = await fetch(`${process.env.UPSTASH2_KV_REST_API_URL}/get/${encodeURIComponent(`device:${deviceId}`)}`, {
+  headers: { Authorization: `Bearer ${process.env.UPSTASH2_KV_REST_API_TOKEN}` }
 });
 let usageJson = await usageRes.json();
 let usage = parseInt(usageJson.result || "0", 10);
@@ -40,8 +40,8 @@ if (!isPaid && usage >= 2) {
     message: `🚀 Hi ${body.first_name || "there"}, you’ve used your free upgrades. Unlock unlimited for $9/month.`
   });
 }
-await fetch(`${process.env.KV_REST_API_URL}/set/${encodeURIComponent(`device:${deviceId}`)}/${usage + 1}`, {
-  headers: { Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}` }
+await fetch(`${process.env.UPSTASH2_KV_REST_API_URL}/set/${encodeURIComponent(`device:${deviceId}`)}/${usage + 1}`, {
+  headers: { Authorization: `Bearer ${process.env.UPSTASH2_KV_REST_API_TOKEN}` }
 });
 
 const system = `
