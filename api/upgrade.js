@@ -203,10 +203,10 @@ return res.status(200).json({
 }
 });
 
-  } catch (err) {
-    return res.status(200).json({
-      ok: false,
-      error: "Server error"
-    });
-  }
+} catch (err) {
+  return res.status(500).json({
+    ok: false,
+    error: err.message || String(err)
+  });
+}
 }
