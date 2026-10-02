@@ -1,4 +1,5 @@
-const { kv } = require('@vercel/kv');
+const UPSTASH_URL = process.env.UPSTASH2_KV_REST_API_URL;
+const UPSTASH_TOKEN = process.env.UPSTASH2_KV_REST_API_TOKEN;
 
 module.exports = async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -30,10 +31,11 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: "no email found" });
     }
 
-    const cleanEmail = String(email).trim().toLowerCase();
+    const cleanEmail = String(email).trim().toLowerCase()
 
-    await kv.set(`paid:${cleanEmail}`, true);
-
+    await fetch(`${UPSTASH_URL}/set/${encodeURIComponent(`paid:${cleanEmail}`)}/true`, {
+  headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` }
+});
     console.log("✅ PAYMENT SUCCESS:", cleanEmail);
     console.log("✅ SAVED PAID KEY:", `paid:${cleanEmail}`);
 
