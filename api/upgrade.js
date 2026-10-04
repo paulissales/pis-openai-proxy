@@ -21,13 +21,41 @@ const deviceId = body.device_id || "unknown";
 
 const lookupEmail = email;
 
-const paidRes = await fetch(`${process.env.UPSTASH2_KV_REST_API_URL}/get/${encodeURIComponent(`paid:${email}`)}`, {
-  headers: { Authorization: `Bearer ${process.env.UPSTASH2_KV_REST_API_TOKEN}` }
-});
+// Check whether the email is paid
+const paidRes = await fetch(
+  `${process.env.UPSTASH2_KV_REST_API_URL}/get/${encodeURIComponent(`paid:${email}`)}`,
+  {
+    headers: {
+      Authorization: `Bearer ${process.env.UPSTASH2_KV_REST_API_TOKEN}`
+    }
+  }
+);
+
 const paidJson = await paidRes.json();
-const isPaid = !!paidJson.result;
-// Remember this device when a paid email has been verified
-if (isPaid && deviceId !== "unknown") {
+const emailIsPaid = !!paidJson.result;
+
+// Check whether this device has already been verified as paid
+let deviceIsPaid = false;
+
+if (deviceId !== "unknown") {
+  const paidDeviceRes = await fetch(
+    `${process.env.UPSTASH2_KV_REST_API_URL}/get/${encodeURIComponent(`paiddevice:${deviceId}`)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.UPSTASH2_KV_REST_API_TOKEN}`
+      }
+    }
+  );
+
+  const paidDeviceJson = await paidDeviceRes.json();
+  deviceIsPaid = !!paidDeviceJson.result;
+}
+
+// Customer is paid if either their email OR their device is verified
+const isPaid = emailIsPaid || deviceIsPaid;
+
+// If a paid email is used on a new device, remember that device
+if (emailIsPaid && deviceId !== "unknown" && !deviceIsPaid) {
   await fetch(
     `${process.env.UPSTASH2_KV_REST_API_URL}/set/${encodeURIComponent(`paiddevice:${deviceId}`)}/1`,
     {
