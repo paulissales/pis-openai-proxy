@@ -26,7 +26,18 @@ const paidRes = await fetch(`${process.env.UPSTASH2_KV_REST_API_URL}/get/${encod
 });
 const paidJson = await paidRes.json();
 const isPaid = !!paidJson.result;
-
+// Remember this device when a paid email has been verified
+if (isPaid && deviceId !== "unknown") {
+  await fetch(
+    `${process.env.UPSTASH2_KV_REST_API_URL}/set/${encodeURIComponent(`paiddevice:${deviceId}`)}/1`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.UPSTASH2_KV_REST_API_TOKEN}`
+      }
+    }
+  );
+}
+    
 let usageRes = await fetch(`${process.env.UPSTASH2_KV_REST_API_URL}/get/${encodeURIComponent(`device:${deviceId}`)}`, {
   headers: { Authorization: `Bearer ${process.env.UPSTASH2_KV_REST_API_TOKEN}` }
 });
